@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aether - Understand your atmosphere</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+  <div class="banner">Demonstration data. Nothing on this page is a live reading. Check IMD and CPCB for real conditions.</div>
+
+  <header class="site-header">
+    <div class="brand">
+      <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 8.5a4.75 4.75 0 0 1 .5 9.5H7z"/></svg>
+      <span class="brand-name">Aether</span>
+      <span class="tagline">Understand your atmosphere.</span>
+    </div>
+
+    <!-- Only visible after sign in -->
+    <div class="header-tools" id="header-tools" hidden>
+      <nav id="main-nav" aria-label="Main navigation"></nav>
+      <div class="loc">
+        <label for="header-city">Location</label>
+        <select id="header-city"></select>
+        <button type="button" class="btn-outline small" id="sign-out">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============ SIGN IN (first page) ============ -->
+    <section id="view-signin" class="view">
+      <div class="signin-grid">
+        <div class="stack">
+          <span class="eyebrow">Your account</span>
+          <h1 class="display">Sign in to see the forecast for your city</h1>
+          <p class="lead">Tell Aether your name and where you are. Once you sign in, the seven-day forecast and current air quality for your location appear straight away.</p>
+          <p class="small muted">Demonstration only: this page has no server, so nothing you type is saved or sent anywhere, and the forecast shown is example data. Do not enter a password you use elsewhere.</p>
+        </div>
+
+        <form id="signin-form" class="card form-card">
+          <h2>Sign in</h2>
+          <div class="field">
+            <label for="f-name">Your name</label>
+            <input id="f-name" name="name" type="text" required autocomplete="name" placeholder="e.g. Adeeb">
+          </div>
+          <div class="field">
+            <label for="f-city">Your location</label>
+            <select id="f-city" name="city" required></select>
+            <span class="small muted">Example data is available for these 12 cities.</span>
+          </div>
+          <div class="field">
+            <label for="f-email">Gmail address</label>
+            <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="you@gmail.com">
+          </div>
+          <div class="field">
+            <label for="f-pass">Password</label>
+            <input id="f-pass" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters">
+          </div>
+          <button type="submit" class="btn-primary big">Sign in and show my forecast</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ HOME ============ -->
+    <section id="view-home" class="view" hidden>
+      <div class="hero">
+        <div class="stack">
+          <span class="eyebrow" id="home-welcome"></span>
+          <h1 class="display">Your daily weather dashboard for India</h1>
+          <p class="lead">Temperature, sky, air quality and the week ahead in one place, so you do not need to switch between pages to plan your day.</p>
+          <div class="row">
+            <button type="button" class="btn-primary" data-go="map">Explore the map</button>
+            <button type="button" class="btn-outline" data-go="forecast" id="home-forecast-btn"></button>
+          </div>
+        </div>
+
+        <article class="card report">
+          <div class="report-top">
+            <div>
+              <div class="muted small">Example report</div>
+              <h2 id="home-city"></h2>
+            </div>
+            <time class="muted small right" datetime="2026-10-11T09:00+05:30">11 October 2026, 09:00 IST<br>demonstration data</time>
+          </div>
+          <div class="report-now">
+            <img id="home-icon" src="" alt="" width="88" height="88">
+            <span class="big-temp" id="home-temp"></span>
+            <div>
+              <div class="cond" id="home-cond"></div>
+            </div>
+          </div>
+          <dl class="stats" id="home-stats"></dl>
+          <div class="aqi-chip" id="home-aqi"></div>
+        </article>
+      </div>
+
+      <div class="block">
+        <h2 class="section-title">India's environmental snapshot</h2>
+        <p class="muted measure">Demonstration statistics worked out only from the example numbers on this page. They are not verified national statistics.</p>
+        <div class="grid g220" id="snapshot"></div>
+      </div>
+
+      <div class="block">
+        <h2 class="section-title">Explore Aether</h2>
+        <div class="grid g280" id="tiles"></div>
+      </div>
+    </section>
+
+    <!-- ============ MAP ============ -->
+    <section id="view-map" class="view" hidden>
+      <div class="block first">
+        <h2 class="section-title">Explore the India weather map</h2>
+        <p class="muted measure">A map of India with a marker for each city, coloured by AQI category. The table lists example values for twelve major cities, and your location is highlighted.</p>
+      </div>
+
+      <!-- Replace this box with a Leaflet map when you add the library -->
+      <div class="map-placeholder">
+        <strong>Map placeholder</strong>
+        <span class="muted">The Leaflet and OpenStreetMap view goes here in the working build.</span>
+        <a href="https://www.openstreetmap.org/#map=5/22.5/79.0" target="_blank" rel="noopener noreferrer">Open the map in a new tab</a>
+      </div>
+
+      <div class="card table-card">
+        <table>
+          <caption>Example weather and CPCB AQI, 12 cities, 11 Oct 2026, 09:00 IST (demonstration data)</caption>
+          <thead>
+            <tr><th scope="col">City</th><th scope="col">Temp</th><th scope="col">Conditions</th><th scope="col">Humidity</th><th scope="col">Wind</th><th scope="col">AQI</th><th scope="col">Map</th></tr>
+          </thead>
+          <tbody id="city-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="block">
+        <h3>AQI legend (CPCB categories)</h3>
+        <div class="grid g180" id="legend"></div>
+      </div>
+    </section>
+
+    <!-- ============ CLEANER AIR ============ -->
+    <section id="view-cleaner" class="view" hidden>
+      <div class="block first">
+        <h2 class="section-title">Breathe better: explore better conditions</h2>
+        <p class="muted measure">Five example places with relatively favourable weather and lower AQI at the same observation time. This is not a ranking of India's cleanest air, and no place is pollution-free. People with heart or lung conditions should still follow their doctor's advice.</p>
+        <div class="grid g220" id="better"></div>
+        <p class="small muted measure">PM values are in µg/m³ and are illustrative. The overall AQI is a calculated score, not a particle concentration.</p>
+      </div>
+    </section>
+
+    <!-- ============ FORECAST ============ -->
+    <section id="view-forecast" class="view" hidden>
+      <div class="block first">
+        <h2 class="section-title" id="forecast-title"></h2>
+        <p class="muted measure">Illustrative demonstration data, not an actual forecast. The example forecast for each city is Delhi's pattern shifted to that city's example temperature. For real forecasts, visit the <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener noreferrer">India Meteorological Department</a>.</p>
+        <div class="grid g150" id="forecast-cards"></div>
+      </div>
+    </section>
+
+    <!-- ============ AIR QUALITY ============ -->
+    <section id="view-air" class="view" hidden>
+      <div class="block first">
+        <h2 class="section-title">Understanding air quality</h2>
+        <p class="muted measure">This page uses the Indian National Air Quality Index from the Central Pollution Control Board (CPCB). It is not the US EPA AQI: the breakpoints and category names differ, so the same number can mean different things.</p>
+      </div>
+
+      <div class="grid g300">
+        <article class="card pad"><h3>What AQI means</h3><p class="muted">The AQI combines measurements of several pollutants into one number from 0 to 500. A higher number means more polluted air. It helps people decide when to take extra care, such as limiting long outdoor exercise on high-pollution days.</p></article>
+        <article class="card pad"><h3>PM2.5 and PM10</h3><p class="muted"><b>PM2.5</b> is particulate matter 2.5 micrometres or smaller, small enough to reach deep into the lungs. <b>PM10</b> is 10 micrometres or smaller and includes road and construction dust.</p></article>
+        <article class="card pad"><h3>Concentration is not AQI</h3><p class="muted">Concentration is a physical measurement in µg/m³. AQI is a calculated score: each pollutant becomes a sub-index and the overall AQI is the highest one. A PM2.5 of 60 µg/m³ is not an AQI of 60.</p></article>
+        <article class="card pad"><h3>Why weather matters</h3><p class="muted">Wind carries pollutants away while calm air lets them build up. Rain washes particles out. Cool, still nights trap pollution near the ground, and heat and sunshine can help form ozone.</p></article>
+      </div>
+
+      <div class="card table-card block">
+        <table>
+          <caption>CPCB AQI categories and possible health impacts</caption>
+          <thead><tr><th scope="col">AQI range</th><th scope="col">Category</th><th scope="col">Possible health impacts</th></tr></thead>
+          <tbody id="health-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="faq measure">
+        <details><summary>Is AQI the same as PM2.5?</summary><p class="muted">No. PM2.5 is a pollutant measured as a concentration. AQI is a score calculated from the concentrations of several pollutants.</p></details>
+        <details><summary>Can two websites show different AQI for the same city?</summary><p class="muted">Yes. They may use different monitoring stations, different times, or different AQI standards, such as CPCB versus US EPA.</p></details>
+        <details><summary>Does a low AQI mean the air is perfectly safe?</summary><p class="muted">Not necessarily. AQI is a summary at one place and time. Sensitive people may still want to take care, and readings change through the day.</p></details>
+      </div>
+    </section>
+
+    <!-- ============ ALERTS AND TIPS ============ -->
+    <section id="view-alerts" class="view" hidden>
+      <div class="two-col block first">
+        <div class="stack">
+          <h2 class="section-title">Weather alerts and warnings</h2>
+          <p class="muted">These are illustrative examples, not current warnings or emergency alerts. For official information, use the <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener noreferrer">India Meteorological Department</a> and the <a href="https://ndma.gov.in/" target="_blank" rel="noopener noreferrer">National Disaster Management Authority</a>.</p>
+        </div>
+        <div class="faq" id="alerts"></div>
+      </div>
+
+      <div class="block">
+        <h2 class="section-title">Today's weather guide</h2>
+        <p class="muted measure">General tips that apply on any day. They are not personalised to today's weather.</p>
+        <div class="grid g320" id="tips"></div>
+      </div>
+    </section>
+
+    <!-- ============ ABOUT ============ -->
+    <section id="view-about" class="view" hidden>
+      <div class="two-col block first">
+        <div class="stack">
+          <h2 class="section-title">About and data sources</h2>
+          <p class="muted">Aether is a learning project that shows how a weather and air-quality dashboard can be organised. Every weather, AQI, forecast, alert and snapshot value here is manually written demonstration data from no live feed.</p>
+          <h3>Limitations</h3>
+          <ul class="muted">
+            <li>No live weather, air-quality, forecast or alert data.</li>
+            <li>No interactive map layers or AQI markers yet.</li>
+            <li>No saved preferences, accounts or notifications.</li>
+          </ul>
+        </div>
+        <div class="stack">
+          <h3>Official and open resources</h3>
+          <ul class="links" id="sources"></ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="brand-name light">Aether</div>
+        <div class="small footer-note">Understand your atmosphere. All values are demonstration data.</div>
+      </div>
+      <a href="#top" class="footer-link">Back to top</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
