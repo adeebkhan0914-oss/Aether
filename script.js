@@ -118,13 +118,68 @@ const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const osm = (name) => 'https://www.openstreetmap.org/search?query=' + encodeURIComponent(name + ', India');
 
+// Work out the kind of weather from the conditions text.
+function kindFor(desc) {
+  const t = (desc || '').toLowerCase();
+  if (t.includes('thunder')) return 'storm';
+  if (t.includes('rain') || t.includes('shower')) return 'rain';
+  if (t.includes('cloud') || t === 'haze') return 'cloud';
+  return 'sun';
+}
+
 // Pick an icon from the conditions text.
 function iconFor(desc) {
-  const t = (desc || '').toLowerCase();
-  if (t.includes('thunder')) return ICONS.storm;
-  if (t.includes('rain') || t.includes('shower')) return ICONS.rain;
-  if (t.includes('cloud') || t === 'haze') return ICONS.cloud;
-  return ICONS.sun;
+  return ICONS[kindFor(desc)];
+}
+
+// ---------- animated background ----------
+function addClouds(layer, count, dark) {
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement('div');
+    c.className = 'cloud' + (dark ? ' dark' : '');
+    const w = 160 + Math.random() * 220;
+    c.style.setProperty('--w', w + 'px');
+    c.style.setProperty('--o', (dark ? 0.55 : 0.5) + Math.random() * 0.3);
+    c.style.setProperty('--t', 55 + Math.random() * 60 + 's');
+    c.style.top = (4 + Math.random() * 40) + '%';
+    c.style.animationDelay = '-' + Math.random() * 90 + 's'; // start at different places
+    layer.appendChild(c);
+  }
+}
+
+function addRain(layer, count) {
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('i');
+    d.className = 'drop';
+    d.style.left = Math.random() * 105 + '%';
+    d.style.height = 14 + Math.random() * 18 + 'px';
+    d.style.animationDuration = 0.55 + Math.random() * 0.5 + 's';
+    d.style.animationDelay = '-' + Math.random() * 2 + 's';
+    d.style.opacity = 0.35 + Math.random() * 0.4;
+    layer.appendChild(d);
+  }
+}
+
+function setWeatherBackground(kind) {
+  const layer = $('weather-bg');
+  document.body.dataset.weather = kind || '';
+  layer.innerHTML = '';
+  if (kind === 'sun') {
+    layer.innerHTML = '<div class="sun"><div class="sun-rays"></div><div class="sun-orb"></div></div>';
+    addClouds(layer, 2, false);
+  } else if (kind === 'cloud') {
+    addClouds(layer, 8, false);
+  } else if (kind === 'rain') {
+    addClouds(layer, 5, true);
+    addRain(layer, 90);
+  } else if (kind === 'storm') {
+    addClouds(layer, 6, true);
+    addRain(layer, 130);
+    layer.insertAdjacentHTML('beforeend',
+      '<div class="flash"></div>' +
+      '<svg class="bolt b1" viewBox="0 0 60 160" aria-hidden="true"><polygon points="38,0 8,84 28,84 14,160 54,62 32,62 48,0"/></svg>' +
+      '<svg class="bolt b2" viewBox="0 0 60 160" aria-hidden="true"><polygon points="38,0 8,84 28,84 14,160 54,62 32,62 48,0"/></svg>');
+  }
 }
 
 function currentCity() {
@@ -228,6 +283,7 @@ function renderCityViews() {
     </tr>`).join('');
 
   $('header-city').value = state.city;
+  setWeatherBackground(kindFor(city.desc));
 }
 
 // ---------- views ----------
@@ -264,6 +320,7 @@ $('sign-out').addEventListener('click', () => {
   state.email = '';
   state.city = 'Delhi';
   $('signin-form').reset();
+  setWeatherBackground(null);
   showView('signin');
 });
 
